@@ -16,6 +16,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/no_data"
                 android:text="@{mapPoint.title}"
                 android:textColor="@android:color/black"/>
 
@@ -23,6 +24,7 @@
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/no_data"
                 android:text="@{mapPoint.description}"
                 android:textColor="@android:color/black"/>
 
@@ -36,6 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
+                    android:hint="@string/no_data"
                     android:text="@{String.valueOf(mapPoint.coordinates.latitude)}"
                     android:textColor="@android:color/black"
                     tools:text="123"/>
@@ -45,6 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
+                    android:hint="@string/no_data"
                     android:text="@{String.valueOf(mapPoint.coordinates.longitude)}"
                     android:textColor="@android:color/black"
                     tools:text="123"/>

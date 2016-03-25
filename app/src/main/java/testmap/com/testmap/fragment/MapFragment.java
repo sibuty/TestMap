@@ -2,14 +2,15 @@ package testmap.com.testmap.fragment;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -23,6 +24,7 @@ import testmap.com.testmap.MainActivity;
 import testmap.com.testmap.R;
 import testmap.com.testmap.entity.MapPoint;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,7 +98,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     public void centerMap(LatLng position) {
-        if(position != null) {
+        if (position != null) {
             CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(position, 18);
             map.animateCamera(cu);
         }
@@ -171,10 +173,16 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         String description = etDescription.getText().toString();
         LatLng coordinates = new LatLng(currentPosition.latitude, currentPosition.longitude);
         MapPoint mapPoint = new MapPoint(title, description, coordinates);
-        mapPointList.add(mapPoint);
+        addPoint(mapPoint);
         updateMarkers();
         cancel();
         activity.mapPointRecyclerVIewAdapter.notifyDataSetChanged();
+    }
+
+    protected void addPoint(MapPoint mapPoint) {
+        mapPointList.add(mapPoint);
+        Collections.sort(mapPointList,
+                (lhs, rhs) -> calculateDistance(lhs.coordinates) - calculateDistance(rhs.coordinates));
     }
 
     @OptionsItem(android.R.id.home)
@@ -216,6 +224,13 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
                 marker.setPosition(position);
             }
         }
+    }
+
+    protected int calculateDistance(LatLng end) {
+        float[] results = new float[1];
+        Location.distanceBetween(currentPosition.latitude, currentPosition.longitude,
+                end.latitude, end.longitude, results);
+        return (int) results[0];
     }
 
 }
