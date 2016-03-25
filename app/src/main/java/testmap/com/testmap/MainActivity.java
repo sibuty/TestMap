@@ -32,5 +32,4 @@ public class MainActivity extends FragmentActivity {
         slidingTabLayout.setCustomTabColorizer(position -> getResources().getColor(R.color.expand_block_text));
         slidingTabLayout.setViewPager(viewPager);
     }
-
 }

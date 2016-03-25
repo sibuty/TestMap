@@ -39,20 +39,12 @@ public class MapFragment extends SupportMapFragment {
         map = getMap();
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
-        map.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-            @Override
-            public void onMyLocationChange(Location location) {
-                loc = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(loc, 18);
-                map.animateCamera(cu);
-            }
+        map.setOnMyLocationChangeListener(location -> {
+            loc = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(loc, 18);
+            map.animateCamera(cu);
         });
-        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                Toast.makeText(getActivity(), latLng.latitude + "  " + latLng.latitude, Toast.LENGTH_LONG).show();
-            }
-        });
+        map.setOnMapClickListener(latLng -> Toast.makeText(getActivity(), latLng.latitude + "  " + latLng.latitude, Toast.LENGTH_LONG).show());
         super.onActivityCreated(savedInstanceState);
     }
 }
