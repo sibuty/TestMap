@@ -32,7 +32,7 @@ public class MapPoint implements Parcelable {
 
         if (!title.equals(mapPoint.title)) return false;
         if (!description.equals(mapPoint.description)) return false;
-        return coordinates.equals(mapPoint.coordinates);
+        return true;
     }
 
     @Override

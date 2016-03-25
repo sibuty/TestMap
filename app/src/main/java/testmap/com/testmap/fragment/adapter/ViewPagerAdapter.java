@@ -3,9 +3,8 @@ package testmap.com.testmap.fragment.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
 import testmap.com.testmap.fragment.ListFragment_;
-import testmap.com.testmap.fragment.MapFragment;
+import testmap.com.testmap.fragment.MapFragment_;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -21,7 +20,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return MapFragment.newInstance(position);
+            return MapFragment_.builder().build();
         } else {
             return ListFragment_.builder().build();
         }

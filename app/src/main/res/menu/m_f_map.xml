@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+            android:id="@+id/miAddMapPoint"
+            android:title="@android:string/search_go"
+            android:icon="@mipmap/ic_plus_black"
+            app:showAsAction="always|collapseActionView"/>
+
+</menu>
