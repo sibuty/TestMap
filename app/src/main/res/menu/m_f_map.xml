@@ -3,8 +3,7 @@
 
     <item
             android:id="@+id/miAddMapPoint"
-            android:title="@android:string/search_go"
             android:icon="@mipmap/ic_plus_black"
-            app:showAsAction="always|collapseActionView"/>
+            app:showAsAction="always"/>
 
 </menu>

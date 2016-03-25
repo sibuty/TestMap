@@ -2,20 +2,22 @@ package testmap.com.testmap.fragment;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 import org.androidannotations.annotations.*;
 import testmap.com.testmap.MainActivity;
 import testmap.com.testmap.R;
@@ -41,6 +43,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     Location currentLocation;
     @InstanceState
     LatLngBounds visibleRegionBounds;
+    @InstanceState
+    LatLng currentPosition;
 
     @ViewById(R.id.mapView)
     MapView mapView;
@@ -54,7 +58,8 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     TextView tvLat;
     @ViewById(R.id.tvLng)
     TextView tvLng;
-
+    @OptionsMenuItem(R.id.miAddMapPoint)
+    MenuItem miAddMapPoint;
 
     MainActivity activity;
     ImageView addMapPoint;
@@ -85,10 +90,24 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
         map.setOnMarkerClickListener(this);
+        map.setOnMapClickListener(latLng -> {
+            currentPosition = latLng;
+            map.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+        });
         map.setOnCameraChangeListener(position ->
                 visibleRegionBounds = map.getProjection().getVisibleRegion().latLngBounds);
         this.mapPointList = activity.mapPointList;
         super.onActivityCreated(savedInstanceState);
+    }
+
+    public void centerMap(LatLng position) {
+        if(position != null) {
+            CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(position, 18);
+            map.animateCamera(cu);
+        }
     }
 
     @Override
@@ -106,6 +125,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     @Override
     public void onResume() {
         mapView.onResume();
+        centerMap(currentPosition);
         super.onResume();
     }
 
@@ -130,12 +150,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        /*if (currentLocation != null && mMarker == null) {
-            LatLng currentPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            mMarker = map.addMarker(new MarkerOptions().position(currentPosition));
-            CameraUpdate cu = CameraUpdateFactory.newLatLngZoom(currentPosition, 18);
-            map.animateCamera(cu);
-        }*/
+        currentPosition = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
     }
 
     @Override
@@ -149,9 +164,24 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     }
 
     @OptionsItem(R.id.miAddMapPoint)
-    protected void addNewMapPoint() {
+    protected void showAddMapPointFrom() {
         llAddMapPoint.setVisibility(View.VISIBLE);
         activity.showHome(true);
+        activity.setToolbarTitle(getString(R.string.addMapPoint));
+        tvLat.setText(String.valueOf(currentPosition.latitude));
+        tvLng.setText(String.valueOf(currentPosition.longitude));
+        activity.showMenuItem(miAddMapPoint, false);
+    }
+
+    @Click(R.id.bAddMapPoint)
+    protected void addMapPoint() {
+        String title = etTitle.getText().toString();
+        String description = etDescription.getText().toString();
+        LatLng coordinates = new LatLng(currentPosition.latitude, currentPosition.longitude);
+        MapPoint mapPoint = new MapPoint(title, description, coordinates);
+        mapPointList.add(mapPoint);
+        updateMarkers();
+        cancel();
     }
 
     @OptionsItem(android.R.id.home)
@@ -159,10 +189,16 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         llAddMapPoint.setVisibility(View.GONE);
         clearAddMapPointForm();
         activity.showHome(false);
+        activity.setToolbarTitle(null);
+        activity.showMenuItem(miAddMapPoint, true);
     }
 
     @UiThread
     protected void clearAddMapPointForm() {
+        etTitle.setText(null);
+        etDescription.setText(null);
+        tvLat.setText(null);
+        tvLng.setText(null);
     }
 
     @Override
@@ -170,21 +206,23 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         if (marker.equals(mMarker)) {
             Toast.makeText(activity, "MY MARKER", Toast.LENGTH_LONG).show();
         }
+        miAddMapPoint.setVisible(false);
         return false;
     }
 
-    @Background
     public void updateMarkers() {
         for (MapPoint mapPoint : mapPointList) {
             Marker marker = markers.get(mapPoint);
             LatLng position = mapPoint.coordinates;
             if (marker == null) {
-                markers.put(mapPoint, map.addMarker(new MarkerOptions().position(position)));
+                markers.put(mapPoint, map.addMarker(new MarkerOptions()
+                        .position(position)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+                ));
             } else {
                 marker.setPosition(position);
             }
         }
     }
-
 
 }

@@ -4,6 +4,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
@@ -26,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     SlidingTabLayout slidingTabLayout;
     @ViewById
     Toolbar toolbar;
+
+    Menu menu;
+
     @InstanceState
     public ArrayList<MapPoint> mapPointList = new ArrayList<MapPoint>();
 
@@ -42,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -56,8 +61,25 @@ public class MainActivity extends AppCompatActivity {
     public void showHome(boolean show) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowHomeEnabled(show);
             actionBar.setDisplayHomeAsUpEnabled(show);
+            actionBar.setDisplayShowHomeEnabled(show);
         }
+        initToolbar();
     }
+
+    public void setToolbarTitle(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        boolean show = title != null;
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(show);
+        }
+        slidingTabLayout.setVisibility(show ? View.GONE : View.VISIBLE);
+        toolbar.setTitle(title);
+        initToolbar();
+    }
+
+    public void showMenuItem(MenuItem menuItem, boolean show) {
+        toolbar.post(() -> toolbar.getMenu().findItem(menuItem.getItemId()).setVisible(show));
+    }
+
 }
