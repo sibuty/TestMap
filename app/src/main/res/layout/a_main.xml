@@ -7,13 +7,28 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <testmap.com.testmap.fragment.widget.SlidingTabLayout
-        android:id="@+id/stl"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:elevation="2dp"/>
+        android:orientation="horizontal">
+
+        <testmap.com.testmap.fragment.widget.SlidingTabLayout
+            android:id="@+id/stl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/ivAddMapPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:src="@mipmap/ic_plus_black"/>
+
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp"
