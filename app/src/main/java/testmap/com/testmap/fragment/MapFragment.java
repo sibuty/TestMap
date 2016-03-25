@@ -62,7 +62,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     MenuItem miAddMapPoint;
 
     MainActivity activity;
-    ImageView addMapPoint;
 
     List<MapPoint> mapPointList;
     HashMap<MapPoint, Marker> markers = new HashMap<MapPoint, Marker>();
@@ -90,13 +89,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         map.setMyLocationEnabled(true);
         map.setOnMarkerClickListener(this);
-        map.setOnMapClickListener(latLng -> {
-            currentPosition = latLng;
-            map.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
-        });
         map.setOnCameraChangeListener(position ->
                 visibleRegionBounds = map.getProjection().getVisibleRegion().latLngBounds);
         this.mapPointList = activity.mapPointList;
@@ -182,6 +174,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         mapPointList.add(mapPoint);
         updateMarkers();
         cancel();
+        activity.mapPointRecyclerVIewAdapter.notifyDataSetChanged();
     }
 
     @OptionsItem(android.R.id.home)

@@ -12,6 +12,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
 import org.androidannotations.annotations.ViewById;
 import testmap.com.testmap.entity.MapPoint;
+import testmap.com.testmap.fragment.adapter.MapPointRecyclerVIewAdapter;
 import testmap.com.testmap.fragment.adapter.ViewPagerAdapter;
 import testmap.com.testmap.fragment.widget.SlidingTabLayout;
 
@@ -34,11 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
     @InstanceState
     public ArrayList<MapPoint> mapPointList = new ArrayList<MapPoint>();
+    public MapPointRecyclerVIewAdapter mapPointRecyclerVIewAdapter;
 
     @AfterViews
     protected void init() {
         initToolbar();
         initTabs();
+        mapPointRecyclerVIewAdapter = new MapPointRecyclerVIewAdapter(mapPointList);
     }
 
     protected void initToolbar() {
