@@ -8,9 +8,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import testmap.com.testmap.fragment.adapter.ViewPagerAdapter;
-import testmap.com.testmap.widget.SlidingTabLayout;
+import testmap.com.testmap.fragment.widget.SlidingTabLayout;
 
-@EActivity(R.layout.activity_main)
+@EActivity(R.layout.a_main)
 public class MainActivity extends FragmentActivity {
 
     private static int countTabs = 2;

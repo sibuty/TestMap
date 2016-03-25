@@ -1,4 +1,4 @@
-package testmap.com.testmap.widget;
+package testmap.com.testmap.fragment.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;

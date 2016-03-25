@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import testmap.com.testmap.fragment.ListFragment_;
 import testmap.com.testmap.fragment.MapFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -22,7 +23,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         if (position == 0) {
             return MapFragment.newInstance(position);
         } else {
-            return new Fragment();
+            return ListFragment_.builder().build();
         }
     }
 
