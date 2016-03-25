@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Игорь\.gradle\caches\modules-2\files-2.1\org.androidannotations\androidannotations-api\3.3.2\7d6149d856b880bbd676047aacb8446a758fbbdb\androidannotations-api-3.3.2.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="7d6149d856b880bbd676047aacb8446a758fbbdb">
+        <dex dex="C:\_projects\StudioProjects\TestMap\app\build\intermediates\pre-dexed\debug\androidannotations-api-3.3.2_060d80025f4e1eaa4a6f5104217a0efa3561a221.jar" />
+    </item>
+
+</items>
