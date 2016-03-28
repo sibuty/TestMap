@@ -60,8 +60,16 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     TextView tvLat;
     @ViewById(R.id.tvLng)
     TextView tvLng;
+    @ViewById(R.id.bAddMapPoint)
+    TextView bAddMapPoint;
+    @ViewById(R.id.bEditMapPoint)
+    TextView bEditMapPoint;
+    @ViewById(R.id.bDeleteMapPoint)
+    TextView bDeleteMapPoint;
     @OptionsMenuItem(R.id.miAddMapPoint)
     MenuItem miAddMapPoint;
+
+    Marker targetMarker;
 
     MainActivity activity;
 
@@ -70,7 +78,6 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     GoogleApiClient googleApiClient;
 
     GoogleMap map;
-    Marker mMarker;
 
     @AfterViews
     protected void init() {
@@ -160,6 +167,9 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
     @OptionsItem(R.id.miAddMapPoint)
     protected void showAddMapPointFrom() {
         llAddMapPoint.setVisibility(View.VISIBLE);
+        bAddMapPoint.setVisibility(View.VISIBLE);
+        bEditMapPoint.setVisibility(View.GONE);
+        bDeleteMapPoint.setVisibility(View.GONE);
         activity.showHome(true);
         activity.setToolbarTitle(getString(R.string.addMapPoint));
         tvLat.setText(String.valueOf(currentPosition.latitude));
@@ -174,7 +184,7 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
         LatLng coordinates = new LatLng(currentPosition.latitude, currentPosition.longitude);
         MapPoint mapPoint = new MapPoint(title, description, coordinates);
         addPoint(mapPoint);
-        updateMarkers();
+        updateMarkers(null);
         cancel();
         activity.mapPointRecyclerVIewAdapter.notifyDataSetChanged();
     }
@@ -204,16 +214,50 @@ public class MapFragment extends Fragment implements GoogleApiClient.ConnectionC
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        if (marker.equals(mMarker)) {
-            Toast.makeText(activity, "MY MARKER", Toast.LENGTH_LONG).show();
+        llAddMapPoint.setVisibility(View.VISIBLE);
+        bAddMapPoint.setVisibility(View.GONE);
+        bEditMapPoint.setVisibility(View.VISIBLE);
+        bDeleteMapPoint.setVisibility(View.VISIBLE);
+        activity.showHome(true);
+        activity.setToolbarTitle(getString(R.string.editMapPoint));
+        this.targetMarker = marker;
+        for (MapPoint mapPoint : mapPointList) {
+            Marker markerValue = markers.get(mapPoint);
+            if(markerValue.equals(marker)) {
+                etTitle.setText(mapPoint.title);
+                etDescription.setText(mapPoint.description);
+                tvLat.setText(String.valueOf(mapPoint.coordinates.latitude));
+                tvLng.setText(String.valueOf(mapPoint.coordinates.longitude));
+            }
         }
-        miAddMapPoint.setVisible(false);
+        activity.showMenuItem(miAddMapPoint, false);
         return false;
     }
 
-    public void updateMarkers() {
+    @Click({R.id.bEditMapPoint, R.id.bDeleteMapPoint})
+    public void updateMarkers(View view) {
         for (MapPoint mapPoint : mapPointList) {
             Marker marker = markers.get(mapPoint);
+            if(targetMarker != null && targetMarker.equals(marker)) {
+                if(view != null) {
+                    MapPoint oldValue = mapPoint;
+                    Marker oldMarker = markers.remove(oldValue);
+                    switch (view.getId()) {
+                        case R.id.bEditMapPoint:
+                            mapPoint.title = etTitle.getText().toString();
+                            mapPoint.description = etDescription.getText().toString();
+                            markers.put(mapPoint, oldMarker);
+                            break;
+                        case R.id.bDeleteMapPoint:
+                            oldMarker.remove();
+                            mapPointList.remove(mapPoint);
+                            break;
+                    }
+                    cancel();
+                    activity.mapPointRecyclerVIewAdapter.notifyDataSetChanged();
+                    this.targetMarker = null;
+                }
+            }
             LatLng position = mapPoint.coordinates;
             if (marker == null) {
                 markers.put(mapPoint, map.addMarker(new MarkerOptions()

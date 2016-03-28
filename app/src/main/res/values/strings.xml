@@ -5,4 +5,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="addMapPoint">Add Point</string>
     <string name="no_data">Нет данных</string>
+    <string name="editMapPoint">Edit</string>
+    <string name="deleteMapPoint">Delete</string>
 </resources>

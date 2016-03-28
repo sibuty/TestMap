@@ -67,6 +67,20 @@
                 android:layout_height="wrap_content"
                 android:text="@string/addMapPoint"/>
 
+        <Button
+                android:id="@+id/bEditMapPoint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/editMapPoint"/>
+
+        <Button
+                android:id="@+id/bDeleteMapPoint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/deleteMapPoint"
+                android:visibility="gone"/>
+
     </LinearLayout>
 
 </RelativeLayout>
